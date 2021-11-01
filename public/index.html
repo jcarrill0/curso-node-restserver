@@ -4,9 +4,53 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Denegado</title>
+    <meta name="google-signin-client_id" content="727055212513-r23d5q2hhho7k2irck99qvlf62n1v5lt.apps.googleusercontent.com">
+    <title>Google Signin</title>
 </head>
 <body>
-    <h1>ACCESO DENEGADO</h1>
+    <h1>Google Signin</h1>
+    <hr>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <a href="#" onclick="signOut();">Sign out</a>
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <script>
+
+        // console.log(window.location.origin)
+
+        // var url = `${window.location.origin}/api/auth/google` 
+        var url = (window.location.hostname.includes('localhost'))
+                    ? 'http://localhost:8081/api/auth/google'
+                    : 'https://node-restserver-jcb.herokuapp.com/api/auth/google'
+
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+            var id_token = googleUser.getAuthResponse().id_token
+            const data = { id_token }
+
+            fetch(url, {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(data => console.log('Nuestro Server', data))
+            .catch(console.log)
+        }
+
+        function signOut() {
+            let auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+            });
+        }
+
+    </script>
 </body>
 </html>
