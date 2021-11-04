@@ -1,5 +1,5 @@
 const { response } = require('express')
-const Categoria = require('../models/Categoria')
+const { Categoria } = require('../models')
 
 
 // obtenerCategorias - paginado - total - populate
@@ -32,10 +32,7 @@ const obtenerCategoria = async (req, res) => {
 
     const categoria = await Categoria
                                 .findById(id)
-                                .populate({
-                                    path: 'usuario', 
-                                    select: 'nombre -_id'
-                                })
+                                .populate('usuario','nombre -_id')
 
     res.json(categoria)
 }
@@ -69,25 +66,29 @@ const crearCategoria = async (req, res) => {
 // actualizarCategoria - param(nombre)
 const actualizarCategoria = async (req, res) => {
     const { id } = req.params
-    const { nombre } = req.body
+    const { estado, usuario, ...data } = req.body
 
-    const dataUpdate = {
-        nombre: nombre.toUpperCase(),
-        usuario: req.usuario._id
-    }
+    data.nombre = data.nombre.toUpperCase()
+    data.usuario = req.usuario._id
  
-    const categoria = await Categoria.findByIdAndUpdate(id, dataUpdate)
+    const categoria = await Categoria.findByIdAndUpdate(id, data, { new: true })
 
-    console.log(dataUpdate);
     res.json(categoria)
 }
 
 // borrarCategoria - estado: false
+const borrarCategoria = async (req, res) => {
+    const { id } = req.params 
+
+    const categoriaBorrada = await Categoria.findByIdAndUpdate(id, { estado: false }, { new: true })
+
+    res.json(categoriaBorrada)
+}
 
 module.exports = {
     obtenerCategorias,
     obtenerCategoria,
     actualizarCategoria,
-    // borrarCategoria,
+    borrarCategoria,
     crearCategoria
 };
