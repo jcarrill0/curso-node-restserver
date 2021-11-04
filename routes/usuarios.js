@@ -41,7 +41,7 @@ router.put('/:id', [
     validarCampos
 ], usuariosPut)
 
-router.put('/', usuariosPatch)
+router.patch('/', usuariosPatch)
 
 router.delete('/:id', [
     validarJWT,
