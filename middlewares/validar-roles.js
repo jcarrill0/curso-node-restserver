@@ -1,7 +1,6 @@
 
 
 const esAdminRole = (req, res, next) => {
-    
     if(!req.usuario) {
         return res.status(500).json({
             msg: 'Se quiere verificar el role sin validar el token primero'
@@ -21,7 +20,6 @@ const esAdminRole = (req, res, next) => {
 
 const tieneRole = (...roles) => {
     return (req, res, next) => {
-
         if(!req.usuario) {
             return res.status(500).json({
                 msg: 'Se quiere verificar el role sin validar el token primero'

@@ -12,7 +12,7 @@ const router = Router()
 router.get('/', obtenerCategorias)
 
 // Obtener una categoria por id - publico
-// crear un middleware de validar ID - [check('id').custom(existeCategoria)]
+// crear un middleware de validar ID 
 router.get('/:id', [
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(existeCategoriaPorId),

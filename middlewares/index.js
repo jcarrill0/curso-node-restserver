@@ -5,5 +5,5 @@ const validaRoles = require('../middlewares/validar-roles')
 module.exports = {
     ...validaCampos,
     ...validaJWT,
-    ...validaRoles
+    ...validaRoles,
 };
